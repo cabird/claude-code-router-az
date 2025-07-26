@@ -1,25 +1,22 @@
 {
   "providers": [
     {
-      "name": "azure-openai",
+      "name": "azure-gpt4",
       "api_base_url": "https://your-resource-name.openai.azure.com/openai/deployments/gpt-4-deployment/chat/completions?api-version=2024-10-21",
-      "api_key": "dummy-key-replaced-by-azure-auth",
       "auth_type": "azure",
-      "models": ["gpt-4", "gpt-35-turbo", "gpt-4o"],
-      "azure_config": {
-        "gpt-4": {
-          "deployment": "gpt-4-deployment",
-          "api_version": "2024-10-21"
-        },
-        "gpt-35-turbo": {
-          "deployment": "gpt-35-turbo-deployment",
-          "api_version": "2024-10-21"
-        },
-        "gpt-4o": {
-          "deployment": "gpt-4o-deployment",
-          "api_version": "2024-10-21"
-        }
-      }
+      "models": ["gpt-4"]
+    },
+    {
+      "name": "azure-gpt35",
+      "api_base_url": "https://your-resource-name.openai.azure.com/openai/deployments/gpt-35-turbo-deployment/chat/completions?api-version=2024-10-21",
+      "auth_type": "azure",
+      "models": ["gpt-35-turbo"]
+    },
+    {
+      "name": "azure-gpt4o",
+      "api_base_url": "https://your-resource-name.openai.azure.com/openai/deployments/gpt-4o-deployment/chat/completions?api-version=2024-10-21",
+      "auth_type": "azure",
+      "models": ["gpt-4o"]
     },
     {
       "name": "openrouter",
@@ -35,9 +32,9 @@
     }
   ],
   "Router": {
-    "default": "azure-openai,gpt-4",
-    "background": "azure-openai,gpt-35-turbo",
-    "think": "azure-openai,gpt-4o",
+    "default": "azure-gpt4,gpt-4",
+    "background": "azure-gpt35,gpt-35-turbo",
+    "think": "azure-gpt4o,gpt-4o",
     "longContext": "openrouter,google/gemini-2.5-pro-preview"
   },
   "APIKEY": "your-secret-key",

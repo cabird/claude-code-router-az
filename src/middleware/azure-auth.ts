@@ -76,15 +76,18 @@ export async function azureAuthMiddleware(
       delete provider.api_key;
     }
     
-    // For Azure OpenAI, we need to handle the URL transformation
-    // Since we can't modify the URL directly, we'll store the deployment info
-    // and let the @musistudio/llms package handle it with a custom transformer
+    // Dynamically construct the Azure OpenAI URL based on the selected model
     if (req.azureDeployment && req.azureApiVersion) {
-      // Store Azure-specific info in headers for the transformer to use
-      request.headers['x-azure-deployment'] = req.azureDeployment;
-      request.headers['x-azure-api-version'] = req.azureApiVersion;
+      // Extract base URL (remove any existing path)
+      const baseUrl = provider.api_base_url.split('/openai/')[0];
       
-      log(`Azure deployment: ${req.azureDeployment}, API version: ${req.azureApiVersion}`);
+      // Construct the full URL with the correct deployment
+      const dynamicUrl = `${baseUrl}/openai/deployments/${req.azureDeployment}/chat/completions?api-version=${req.azureApiVersion}`;
+      
+      // Update the provider's URL
+      provider.api_base_url = dynamicUrl;
+      
+      log(`Dynamically set Azure URL: ${dynamicUrl}`);
     }
     
     log(`Added Azure auth token for provider: ${provider.name}`);
