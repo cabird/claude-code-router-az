@@ -6,6 +6,45 @@
 
 ![](blog/images/claude-code.png)
 
+## 🚀 Quick Start - Run from Repository
+
+Run Claude Code Router directly from the repository without installing globally:
+
+```bash
+# Clone the repository
+git clone https://github.com/cabird/claude-code-router-az.git
+cd claude-code-router-az
+
+# For Azure OpenAI users, ensure you're logged in first:
+az login
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+
+# Create config directory and copy Azure example config
+mkdir -p ~/.claude-code-router
+cp config.azure.example.json ~/.claude-code-router/config.json
+
+# Edit the config file with your Azure resource name and deployments
+# nano ~/.claude-code-router/config.json
+
+# Start the router server
+node dist/cli.js start
+
+# In a new terminal, set environment variable and run Claude Code
+export ANTHROPIC_BASE_URL="http://localhost:3456"
+claude "Your prompt here"    # Single query
+# OR
+claude                       # Interactive mode
+
+# Test your configuration
+./test-models.js      # Test all configured models
+./test-advanced.js    # Test routing scenarios
+```
+
 ## ✨ Features
 
 - **Model Routing**: Route requests to different models based on your needs (e.g., background tasks, thinking, long context).

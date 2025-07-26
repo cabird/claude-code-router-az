@@ -66,15 +66,16 @@ function getAllModels(config) {
 // Make HTTP request to the service
 async function testModel(model, apiKey) {
   return new Promise((resolve, reject) => {
+    const query = "What AI model are you? Please state your model name and creator. Be specific about your version if you know it.";
     const postData = JSON.stringify({
       model: model,
       messages: [
         {
           role: "user",
-          content: "Say 'Hello! I am working.' and nothing else."
+          content: query
         }
       ],
-      max_tokens: 50,
+      max_tokens: 150,
       temperature: 0
     });
 
@@ -181,6 +182,8 @@ async function main() {
   // Test each model
   const results = [];
   
+  console.log(`Query: "${colors.yellow}What AI model are you? Please state your model name and creator. Be specific about your version if you know it.${colors.reset}"\n`);
+  
   for (const model of models) {
     process.stdout.write(`Testing ${colors.blue}${model}${colors.reset}... `);
     
@@ -201,6 +204,11 @@ async function main() {
         if (content) {
           console.log(`  Response: "${content.trim()}"`);
         }
+      }
+      
+      // Show the model field from response if available
+      if (result.response && result.response.model) {
+        console.log(`  Model reported in response: ${colors.blue}${result.response.model}${colors.reset}`);
       }
     } else {
       console.log(`${colors.red}✗${colors.reset}`);

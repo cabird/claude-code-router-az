@@ -89,8 +89,8 @@ const testScenarios = [
     name: 'Default Model',
     description: 'Tests the default routing',
     request: {
-      messages: [{ role: "user", content: "Say 'Default model works!' and nothing else." }],
-      max_tokens: 50
+      messages: [{ role: "user", content: "What AI model are you? Please state your model name and creator." }],
+      max_tokens: 150
     }
   },
   {
@@ -98,8 +98,8 @@ const testScenarios = [
     description: 'Tests background/simple task routing (claude-3-5-haiku)',
     request: {
       model: "claude-3-5-haiku-latest",
-      messages: [{ role: "user", content: "Say 'Background model works!' and nothing else." }],
-      max_tokens: 50
+      messages: [{ role: "user", content: "What AI model are you? Please state your model name and creator." }],
+      max_tokens: 150
     }
   },
   {
@@ -107,8 +107,8 @@ const testScenarios = [
     description: 'Tests thinking/reasoning model routing',
     request: {
       thinking: true,
-      messages: [{ role: "user", content: "What is 2+2? Think step by step." }],
-      max_tokens: 100
+      messages: [{ role: "user", content: "What AI model are you? Can you think about your identity and capabilities?" }],
+      max_tokens: 200
     }
   },
   {
@@ -117,27 +117,27 @@ const testScenarios = [
     request: {
       messages: [{ 
         role: "user", 
-        content: "This is a test. " + "Lorem ipsum dolor sit amet. ".repeat(10000) + " Say 'Long context model works!' and nothing else."
+        content: "This is a test. " + "Lorem ipsum dolor sit amet. ".repeat(10000) + " What AI model are you?"
       }],
-      max_tokens: 50
+      max_tokens: 150
     }
   },
   {
     name: 'Web Search',
     description: 'Tests web search model routing',
     request: {
-      messages: [{ role: "user", content: "Say 'Web search model works!' and nothing else." }],
+      messages: [{ role: "user", content: "What AI model are you? Please state your model name and creator." }],
       tools: [{ type: "web_search" }],
-      max_tokens: 50
+      max_tokens: 150
     }
   },
   {
     name: 'Direct Model Selection',
     description: 'Tests direct model selection bypass',
     request: {
-      model: "deepseek,deepseek-chat",
-      messages: [{ role: "user", content: "Say 'Direct model selection works!' and nothing else." }],
-      max_tokens: 50
+      model: "azure-gpt41,gpt-4.1",
+      messages: [{ role: "user", content: "What AI model are you? Please state your model name and creator." }],
+      max_tokens: 150
     }
   }
 ];
@@ -238,9 +238,14 @@ async function main() {
           ? result.response.content.find(c => c.type === 'text')?.text 
           : result.response.content;
         if (content) {
-          const preview = content.trim().substring(0, 100);
-          console.log(`  Response: "${preview}${content.length > 100 ? '...' : ''}"`);
+          // Show full response for model identification questions
+          console.log(`  Response: "${content.trim()}"`);
         }
+      }
+      
+      // Show the model field from response if available
+      if (result.response && result.response.model) {
+        console.log(`  Model in response: ${colors.blue}${result.response.model}${colors.reset}`);
       }
     } else {
       console.log(`${colors.red}✗${colors.reset}`);

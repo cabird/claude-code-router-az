@@ -1,0 +1,26 @@
+{
+  "providers": [
+    {
+      "name": "azure-gpt4o",
+      "api_base_url": "https://goldsmith-openai.openai.azure.com/openai/deployments/gpt-4o-deployment/chat/completions?api-version=2025-01-01-preview",
+      "auth_type": "azure",
+      "models": ["gpt-4o"]
+    },
+    {
+      "name": "azure-gpt41",
+      "api_base_url": "https://goldsmith-openai.openai.azure.com/openai/deployments/gpt-4.1-deployment/chat/completions?api-version=2025-01-01-preview",
+      "auth_type": "azure",
+      "models": ["gpt-4.1"]
+    }
+  ],
+  "Router": {
+    "default": "azure-gpt4o,gpt-4o",
+    "background": "azure-gpt41,gpt-4.1",
+    "think": "azure-gpt4o,gpt-4o",
+    "longContext": "azure-gpt41,gpt-4.1",
+    "webSearch": "azure-gpt4o,gpt-4o"
+  },
+  "HOST": "127.0.0.1",
+  "PORT": 3456,
+  "LOG": true
+}
