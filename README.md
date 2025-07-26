@@ -9,7 +9,7 @@
 ## ✨ Features
 
 - **Model Routing**: Route requests to different models based on your needs (e.g., background tasks, thinking, long context).
-- **Multi-Provider Support**: Supports various model providers like OpenRouter, DeepSeek, Ollama, Gemini, Volcengine, and SiliconFlow.
+- **Multi-Provider Support**: Supports various model providers like OpenRouter, DeepSeek, Ollama, Gemini, Volcengine, SiliconFlow, and Azure OpenAI (with Azure CLI authentication).
 - **Request/Response Transformation**: Customize requests and responses for different providers using transformers.
 - **Dynamic Model Switching**: Switch models on-the-fly within Claude Code using the `/model` command.
 - **GitHub Actions Integration**: Trigger Claude Code tasks in your GitHub workflows.
@@ -147,6 +147,49 @@ Here is a comprehensive example:
   }
 }
 ```
+
+#### Azure OpenAI Support
+
+Claude Code Router supports Azure OpenAI with Azure CLI authentication (no API key required). This uses your Azure identity for authentication via `@azure/identity`.
+
+**Prerequisites:**
+1. Install Azure CLI and login: `az login`
+2. Ensure you have appropriate RBAC permissions for your Azure OpenAI resource
+
+**Configuration:**
+
+Each Azure OpenAI deployment requires its own provider entry:
+
+```json
+{
+  "providers": [
+    {
+      "name": "azure-gpt4",
+      "api_base_url": "https://your-resource-name.openai.azure.com/openai/deployments/gpt-4-deployment/chat/completions?api-version=2024-10-21",
+      "auth_type": "azure",
+      "models": ["gpt-4"]
+    },
+    {
+      "name": "azure-gpt35",
+      "api_base_url": "https://your-resource-name.openai.azure.com/openai/deployments/gpt-35-turbo-deployment/chat/completions?api-version=2024-10-21",
+      "auth_type": "azure",
+      "models": ["gpt-35-turbo"]
+    }
+  ],
+  "Router": {
+    "default": "azure-gpt4,gpt-4",
+    "background": "azure-gpt35,gpt-35-turbo"
+  }
+}
+```
+
+Key differences for Azure OpenAI:
+- Set `auth_type` to `"azure"` (no `api_key` field needed)
+- Include full Azure OpenAI URL with deployment and API version in `api_base_url`
+- Each deployment needs its own provider entry
+- The router will automatically authenticate using Azure CLI credentials
+
+See `config.azure.example.json` for a complete example.
 
 ### 3. Running Claude Code with the Router
 
@@ -305,6 +348,39 @@ module.exports = async function router(req, config) {
 };
 ```
 
+## 🧪 Testing Your Configuration
+
+Two test scripts are provided to validate your configuration:
+
+### Test All Models
+Tests each configured model with a simple request:
+
+```bash
+npm run test:models
+# or
+./test-models.js
+```
+
+This script will:
+- Check if the service is running
+- Send a test request to each configured model
+- Report success/failure and response times
+
+### Test Routing Scenarios
+Tests different routing scenarios (default, background, thinking, long context, web search):
+
+```bash
+npm run test:advanced
+# or
+./test-advanced.js
+```
+
+This script will:
+- Test each routing scenario defined in your config
+- Show which model was selected for each scenario
+- Validate that routing rules are working correctly
+
+Make sure the Claude Code Router service is running (`ccr start`) before running tests.
 ## 🤖 GitHub Actions
 
 Integrate Claude Code Router into your CI/CD pipeline. After setting up [Claude Code Actions](https://docs.anthropic.com/en/docs/claude-code/github-actions), modify your `.github/workflows/claude.yaml` to use the router:

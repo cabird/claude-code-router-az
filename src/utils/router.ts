@@ -118,6 +118,29 @@ export const router = async (req: any, _res: any, config: any) => {
       model = await getUseModel(req, tokenCount, config);
     }
     req.body.model = model;
+    
+    // Parse the model string and find the provider
+    const [providerName, modelName] = model.split(',');
+    const providers = config.providers || config.Providers || [];
+    const provider = providers.find((p: any) => p.name === providerName);
+    
+    if (!provider) {
+      log(`Provider '${providerName}' not found in config. Available providers: ${providers.map((p: any) => p.name).join(', ')}`);
+    }
+    
+    // Store provider info for middleware to use
+    (req as any).selectedProvider = provider;
+    (req as any).selectedModel = modelName;
+    
+    // For Azure providers, we need to handle model mapping
+    if (provider && provider.auth_type === 'azure' && provider.azure_config) {
+      const modelConfig = provider.azure_config[modelName];
+      if (modelConfig) {
+        (req as any).azureDeployment = modelConfig.deployment;
+        (req as any).azureApiVersion = modelConfig.api_version;
+        log(`Azure model mapping: ${modelName} -> deployment: ${modelConfig.deployment}, version: ${modelConfig.api_version}`);
+      }
+    }
   } catch (error: any) {
     log("Error in router middleware:", error.message);
     req.body.model = config.Router!.default;

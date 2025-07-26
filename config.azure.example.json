@@ -1,0 +1,45 @@
+{
+  "providers": [
+    {
+      "name": "azure-openai",
+      "api_base_url": "https://your-resource-name.openai.azure.com/openai/deployments/gpt-4-deployment/chat/completions?api-version=2024-10-21",
+      "api_key": "dummy-key-replaced-by-azure-auth",
+      "auth_type": "azure",
+      "models": ["gpt-4", "gpt-35-turbo", "gpt-4o"],
+      "azure_config": {
+        "gpt-4": {
+          "deployment": "gpt-4-deployment",
+          "api_version": "2024-10-21"
+        },
+        "gpt-35-turbo": {
+          "deployment": "gpt-35-turbo-deployment",
+          "api_version": "2024-10-21"
+        },
+        "gpt-4o": {
+          "deployment": "gpt-4o-deployment",
+          "api_version": "2024-10-21"
+        }
+      }
+    },
+    {
+      "name": "openrouter",
+      "api_base_url": "https://openrouter.ai/api/v1/chat/completions",
+      "api_key": "sk-xxx",
+      "models": [
+        "google/gemini-2.5-pro-preview",
+        "anthropic/claude-3.5-sonnet"
+      ],
+      "transformer": {
+        "use": ["openrouter"]
+      }
+    }
+  ],
+  "Router": {
+    "default": "azure-openai,gpt-4",
+    "background": "azure-openai,gpt-35-turbo",
+    "think": "azure-openai,gpt-4o",
+    "longContext": "openrouter,google/gemini-2.5-pro-preview"
+  },
+  "APIKEY": "your-secret-key",
+  "HOST": "127.0.0.1"
+}

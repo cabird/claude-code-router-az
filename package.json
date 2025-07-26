@@ -7,7 +7,9 @@
   },
   "scripts": {
     "build": "esbuild src/cli.ts --bundle --platform=node --outfile=dist/cli.js && shx cp node_modules/tiktoken/tiktoken_bg.wasm dist/tiktoken_bg.wasm",
-    "release": "npm run build && npm publish"
+    "release": "npm run build && npm publish",
+    "test:models": "node test-models.js",
+    "test:advanced": "node test-advanced.js"
   },
   "keywords": [
     "claude",
@@ -19,6 +21,7 @@
   "author": "musistudio",
   "license": "MIT",
   "dependencies": {
+    "@azure/identity": "^4.5.0",
     "@musistudio/llms": "^1.0.14",
     "dotenv": "^16.4.7",
     "json5": "^2.2.3",

@@ -6,6 +6,7 @@ import { initConfig, initDir } from "./utils";
 import { createServer } from "./server";
 import { router } from "./utils/router";
 import { apiKeyAuth } from "./middleware/auth";
+import { azureAuthMiddleware } from "./middleware/azure-auth";
 import {
   cleanupPidFile,
   isServiceRunning,
@@ -97,6 +98,7 @@ async function run(options: RunOptions = {}) {
   server.addHook("preHandler", async (req, reply) =>
     router(req, reply, config)
   );
+  server.addHook("preHandler", azureAuthMiddleware);
   server.start();
 }
 
