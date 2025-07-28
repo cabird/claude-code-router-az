@@ -6,44 +6,50 @@
 
 ![](blog/images/claude-code.png)
 
-## 🚀 Quick Start - Run from Repository
+## 🚀 Quick Start — Azure RBAC Version Only
 
-Run Claude Code Router directly from the repository without installing globally:
+Run Claude Code Router directly from this repository (with Azure CLI RBAC). Do **not** install @musistudio/claude-code-router from npmjs.com:
 
 ```bash
-# Clone the repository
+# 1. Uninstall public npm package if present
+npm uninstall -g @musistudio/claude-code-router
+
+# 2. Clone and enter this repository
 git clone https://github.com/cabird/claude-code-router-az.git
 cd claude-code-router-az
 
-# For Azure OpenAI users, ensure you're logged in first:
+# 3. Ensure Azure login
 az login
 
-# Install dependencies
+# 4. Install dependencies & build
 npm install
-
-# Build the project
 npm run build
 
-# Create config directory and copy Azure example config
+# 5. Link ccr into your PATH for CLI use
+npm link
+
+# 6. Prepare config (edit for your resource/deployment)
 mkdir -p ~/.claude-code-router
 cp config.azure.example.json ~/.claude-code-router/config.json
+nano ~/.claude-code-router/config.json
 
-# Edit the config file with your Azure resource name and deployments
-# nano ~/.claude-code-router/config.json
+# 7. Start the router server
+ccr start
 
-# Start the router server
-node dist/cli.js start
+# 8. Test your configuration
+./test-models.js
 
-# In a new terminal, set environment variable and run Claude Code
-export ANTHROPIC_BASE_URL="http://localhost:3456"
-claude "Your prompt here"    # Single query
-# OR
-claude                       # Interactive mode
+# 9. Confirm version (should include 'az')
+ccr --version
 
-# Test your configuration
-./test-models.js      # Test all configured models
-./test-advanced.js    # Test routing scenarios
+# 10. Use ccr to invoke Claude Code via router
+ccr code "Your prompt here"
+# or
+ccr code              # Launch interactive shell
 ```
+
+> Ensure no other (public) version of @musistudio/claude-code-router is installed globally. Only use the version from this repository for Azure RBAC support.
+
 
 ## ✨ Features
 
