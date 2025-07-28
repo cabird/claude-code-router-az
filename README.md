@@ -25,8 +25,8 @@ az login
 npm install
 npm run build
 
-# 5. Link ccr into your PATH for CLI use
-npm link
+# 5. Install this fork globally for CLI use
+npm install -g .
 
 # 6. Prepare config (edit for your resource/deployment)
 mkdir -p ~/.claude-code-router
